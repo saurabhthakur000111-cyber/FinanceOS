@@ -5,12 +5,16 @@
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyc
 
 # macOS
 .DS_Store
 
 # Environment
 .env
+
+# Database
+*.db
 
 # Testing
 .pytest_cache/
@@ -20,7 +24,8 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Logs
 logs/
-__pycache__/
-*.pyc
-.DS_Store
+# Database
+*.db
