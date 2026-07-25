@@ -1,47 +1,55 @@
-"""
-FinanceOS Database Module
-"""
-
 import sqlite3
-from pathlib import Path
+from datetime import datetime
 
 
 class Database:
 
     def __init__(self):
-        self.db_path = Path("financeos.db")
+        self.connection = sqlite3.connect("financeos.db")
+        self.create_tables()
 
-    def connect(self):
-        return sqlite3.connect(self.db_path)
 
-    def initialize(self):
-        connection = self.connect()
-        cursor = connection.cursor()
+    def create_tables(self):
 
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS stocks (
+        query = """
+        CREATE TABLE IF NOT EXISTS stocks(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            symbol TEXT NOT NULL,
+            symbol TEXT,
             price REAL,
             volume INTEGER,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            created_at TEXT
         )
-        """)
+        """
 
-        connection.commit()
-        connection.close()
+        self.connection.execute(query)
+        self.connection.commit()
+
 
     def save_stock(self, symbol, price, volume):
 
-        connection = self.connect()
-        cursor = connection.cursor()
+        query = """
+        INSERT INTO stocks
+        (symbol, price, volume, created_at)
+        VALUES (?, ?, ?, ?)
+        """
 
-        cursor.execute("""
-        INSERT INTO stocks(symbol, price, volume)
-        VALUES (?, ?, ?)
-        """, (symbol, price, volume))
+        self.connection.execute(
+            query,
+            (
+                symbol,
+                price,
+                volume,
+                datetime.now()
+            )
+        )
 
-        connection.commit()
-        connection.close()
+        self.connection.commit()
 
-        print(f"{symbol} data saved successfully.")
+
+    def fetch_all(self, query):
+
+        cursor = self.connection.cursor()
+
+        cursor.execute(query)
+
+        return cursor.fetchall()
