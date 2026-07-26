@@ -1,8 +1,13 @@
 import streamlit as st
-import pandas as pd
 import yfinance as yf
-import plotly.graph_objects as go
+import pandas as pd
 
+from database.database import add_stock, get_portfolio
+
+
+# -----------------------------
+# Page Configuration
+# -----------------------------
 
 st.set_page_config(
     page_title="FinanceOS",
@@ -11,179 +16,149 @@ st.set_page_config(
 )
 
 
+# -----------------------------
+# Header
+# -----------------------------
+
 st.title("📈 FinanceOS")
-st.subheader(
-    "AI Powered Financial Intelligence Platform"
-)
+st.subheader("AI Powered Financial Intelligence Platform")
 
 
-st.divider()
-
-
+# -----------------------------
 # Market Overview
+# -----------------------------
 
 st.header("🌎 Market Overview")
 
 
-symbols = {
-    "NIFTY 50": "^NSEI",
-    "SENSEX": "^BSESN",
-    "RELIANCE": "RELIANCE.NS",
-    "TCS": "TCS.NS"
-}
-
-
-cols = st.columns(4)
-
-
-for col, (name, ticker) in zip(cols, symbols.items()):
-
+def get_price(symbol):
     try:
+        data = yf.Ticker(symbol)
+        price = data.history(period="1d")["Close"].iloc[-1]
+        return round(float(price), 2)
 
-        data = yf.download(
-            ticker,
-            period="5d",
-            progress=False
-        )
-
-
-        price = data["Close"].iloc[-1]
+    except Exception:
+        return "N/A"
 
 
-        col.metric(
-            name,
-            f"₹{float(price):,.2f}"
-        )
+col1, col2, col3, col4 = st.columns(4)
 
 
-    except:
+with col1:
+    st.metric(
+        "NIFTY 50",
+        get_price("^NSEI")
+    )
 
-        col.metric(
-            name,
-            "N/A"
-        )
+with col2:
+    st.metric(
+        "SENSEX",
+        get_price("^BSESN")
+    )
+
+with col3:
+    st.metric(
+        "RELIANCE",
+        get_price("RELIANCE.NS")
+    )
+
+with col4:
+    st.metric(
+        "TCS",
+        get_price("TCS.NS")
+    )
 
 
-st.divider()
-
-
-# Portfolio Section
+# -----------------------------
+# Portfolio Intelligence
+# -----------------------------
 
 st.header("💼 Portfolio Intelligence")
+
+
+st.subheader("📁 Add Stock Holding")
 
 
 col1, col2, col3 = st.columns(3)
 
 
 with col1:
-
-    st.metric(
-        "Portfolio Value",
-        "₹10,00,000"
+    symbol = st.text_input(
+        "Stock Symbol",
+        "RELIANCE.NS"
     )
 
 
 with col2:
-
-    st.metric(
-        "Today's Return",
-        "+1.25%"
+    quantity = st.number_input(
+        "Quantity",
+        min_value=1,
+        value=10
     )
 
 
 with col3:
-
-    st.metric(
-        "Risk Score",
-        "Medium"
+    price = st.number_input(
+        "Buy Price",
+        min_value=1.0,
+        value=2500.0
     )
 
 
-st.divider()
+if st.button("➕ Add Stock"):
 
+    add_stock(
+        symbol,
+        quantity,
+        price
+    )
 
-# Performance Chart
-
-st.header("📊 Market Performance")
-
-
-try:
-
-    data = yf.download(
-        "RELIANCE.NS",
-        period="1y",
-        progress=False
+    st.success(
+        "Stock added successfully"
     )
 
 
-    fig = go.Figure()
+# -----------------------------
+# Display Portfolio
+# -----------------------------
+
+st.subheader("📊 Current Holdings")
 
 
-    fig.add_trace(
-        go.Scatter(
-            x=data.index,
-            y=data["Close"].values.flatten(),
-            name="Reliance"
-        )
+portfolio = get_portfolio()
+
+
+if portfolio:
+
+    df = pd.DataFrame(
+        portfolio,
+        columns=[
+            "ID",
+            "Symbol",
+            "Quantity",
+            "Buy Price"
+        ]
     )
 
-
-    fig.update_layout(
-        height=400,
-        xaxis_title="Date",
-        yaxis_title="Price"
-    )
-
-
-    st.plotly_chart(
-        fig,
+    st.dataframe(
+        df,
         width="stretch"
     )
 
 
-except:
+else:
 
-    st.warning(
-        "Market data unavailable"
+    st.info(
+        "No stocks added yet"
     )
 
 
+# -----------------------------
+# Footer
+# -----------------------------
+
 st.divider()
 
-
-# System Modules
-
-st.header("🚀 FinanceOS Modules")
-
-
-modules = pd.DataFrame(
-    {
-        "Module": [
-            "Financial Statements",
-            "Ratio Analysis",
-            "Portfolio Management",
-            "Risk Engine",
-            "Monte Carlo Simulation",
-            "Markowitz Optimization",
-            "DCF Valuation",
-            "Graham Valuation",
-            "Black-Scholes",
-            "Stock Screener",
-            "AI Assistant"
-        ],
-        "Status": [
-            "Completed"
-        ] * 11
-    }
-)
-
-
-st.dataframe(
-    modules,
-    width="stretch"
-)
-
-
-st.success(
-    "FinanceOS Platform Operational"
+st.caption(
+    "FinanceOS | AI Powered Financial Intelligence Platform"
 )
