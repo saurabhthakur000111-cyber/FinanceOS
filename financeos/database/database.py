@@ -58,3 +58,56 @@ if __name__ == "__main__":
     print(
         "Database initialized"
     )
+def add_stock(symbol, quantity, buy_price):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+
+    cursor.execute(
+        """
+        INSERT INTO portfolio
+        (
+            symbol,
+            quantity,
+            buy_price
+        )
+        VALUES (?, ?, ?)
+        """,
+        (
+            symbol,
+            quantity,
+            buy_price
+        )
+    )
+
+
+    conn.commit()
+
+    conn.close()
+
+
+
+def get_portfolio():
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM portfolio
+        """
+    )
+
+
+    data = cursor.fetchall()
+
+
+    conn.close()
+
+
+    return data
