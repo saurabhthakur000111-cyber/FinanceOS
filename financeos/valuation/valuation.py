@@ -1,45 +1,52 @@
-"""
-FinanceOS Valuation Engine
-Basic DCF valuation module
-"""
-
-class Valuation:
-
-    def __init__(self, cash_flow, growth_rate, discount_rate):
-        self.cash_flow = cash_flow
-        self.growth_rate = growth_rate
-        self.discount_rate = discount_rate
+from financeos.valuation.dcf import DCFValuation
+from financeos.valuation.graham import GrahamValuation
 
 
-    def dcf_value(self, years=5):
+class CompanyValuation:
 
-        value = 0
+    def __init__(self):
 
-        for year in range(1, years + 1):
-            future_cash_flow = (
-                self.cash_flow *
-                ((1 + self.growth_rate) ** year)
-            )
+        self.current_price = 333.02
 
-            discounted = (
-                future_cash_flow /
-                ((1 + self.discount_rate) ** year)
-            )
+    def show(self):
 
-            value += discounted
+        dcf = DCFValuation(
+            free_cash_flow=100,
+            growth_rate=0.10,
+            discount_rate=0.12,
+            terminal_growth=0.03
+        )
 
-        return round(value, 2)
+        dcf_value = dcf.calculate()
+
+        graham = GrahamValuation(
+            eps=12,
+            book_value=45
+        )
+
+        graham_value = graham.calculate()
+
+        intrinsic = (dcf_value + graham_value) / 2
+
+        margin = (
+            (intrinsic - self.current_price)
+            / intrinsic
+        ) * 100
+
+        print("========== COMPANY VALUATION ==========")
+
+        print(f"Current Price    : ₹{self.current_price:.2f}")
+        print(f"DCF Value        : ₹{dcf_value:.2f}")
+        print(f"Graham Value     : ₹{graham_value:.2f}")
+        print(f"Intrinsic Value  : ₹{intrinsic:.2f}")
+        print(f"Margin of Safety : {margin:.2f}%")
+
+        if intrinsic > self.current_price:
+            print("Recommendation   : BUY")
+        else:
+            print("Recommendation   : SELL")
 
 
 if __name__ == "__main__":
 
-    valuation = Valuation(
-        cash_flow=1000000,
-        growth_rate=0.08,
-        discount_rate=0.10
-    )
-
-    result = valuation.dcf_value()
-
-    print("========== DCF VALUATION ==========")
-    print("Intrinsic Value :", result)
+    CompanyValuation().show()
