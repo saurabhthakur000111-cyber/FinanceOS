@@ -2,16 +2,16 @@ class RatioAnalysis:
 
     def __init__(
         self,
-        current_assets,
-        current_liabilities,
-        total_debt,
-        total_equity,
-        net_income,
-        total_assets,
-        revenue,
-        gross_profit,
-        shares_outstanding,
-        market_price
+        current_assets=500000,
+        current_liabilities=250000,
+        total_debt=400000,
+        total_equity=600000,
+        net_income=120000,
+        total_assets=1000000,
+        revenue=800000,
+        gross_profit=320000,
+        shares_outstanding=10000,
+        market_price=333.02
     ):
 
         self.current_assets = current_assets
@@ -49,28 +49,19 @@ class RatioAnalysis:
     def pe_ratio(self):
         return self.market_price / self.eps()
 
+    def analyze(self):
+        print("========== FINANCIAL RATIOS ==========")
+        print(f"Current Ratio : {self.current_ratio():.2f}")
+        print(f"Debt/Equity   : {self.debt_to_equity():.2f}")
+        print(f"ROE           : {self.roe():.2%}")
+        print(f"ROA           : {self.roa():.2%}")
+        print(f"Gross Margin  : {self.gross_margin():.2%}")
+        print(f"Net Margin    : {self.net_margin():.2%}")
+        print(f"EPS           : ₹{self.eps():.2f}")
+        print(f"P/E Ratio     : {self.pe_ratio():.2f}")
+
 
 if __name__ == "__main__":
 
-    ratio = RatioAnalysis(
-        current_assets=500000,
-        current_liabilities=250000,
-        total_debt=400000,
-        total_equity=600000,
-        net_income=120000,
-        total_assets=1000000,
-        revenue=800000,
-        gross_profit=320000,
-        shares_outstanding=10000,
-        market_price=333.02
-    )
-
-    print("========== FINANCIAL RATIOS ==========")
-    print(f"Current Ratio : {ratio.current_ratio():.2f}")
-    print(f"Debt/Equity   : {ratio.debt_to_equity():.2f}")
-    print(f"ROE           : {ratio.roe():.2%}")
-    print(f"ROA           : {ratio.roa():.2%}")
-    print(f"Gross Margin  : {ratio.gross_margin():.2%}")
-    print(f"Net Margin    : {ratio.net_margin():.2%}")
-    print(f"EPS           : ₹{ratio.eps():.2f}")
-    print(f"P/E Ratio     : {ratio.pe_ratio():.2f}")
+    ratio = RatioAnalysis()
+    ratio.analyze()

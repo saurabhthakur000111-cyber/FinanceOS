@@ -18,7 +18,14 @@ class Portfolio:
 
         return total
 
-    def show(self):
+    def show_portfolio(self):
+
+        # Add sample data if portfolio is empty
+        if not self.assets:
+            self.add_asset("AAPL", 10, 333.02)
+            self.add_asset("MSFT", 5, 381.70)
+            self.add_asset("GOOG", 3, 319.09)
+
         print("========== PORTFOLIO ==========")
 
         for asset in self.assets:
@@ -26,21 +33,20 @@ class Portfolio:
 
             print(
                 f'{asset["symbol"]} | '
-                f'{asset["shares"]} shares | '
+                f'{asset["shares"]} Shares | '
                 f'₹{asset["price"]:.2f} | '
                 f'Value = ₹{value:.2f}'
             )
 
-        print("----------------------------")
+        print("------------------------------")
         print(f"Total Portfolio Value : ₹{self.total_value():,.2f}")
+
+    # Backward compatibility
+    def show(self):
+        self.show_portfolio()
 
 
 if __name__ == "__main__":
 
-    p = Portfolio()
-
-    p.add_asset("AAPL", 10, 333.02)
-    p.add_asset("MSFT", 5, 520.40)
-    p.add_asset("GOOG", 3, 205.80)
-
-    p.show()
+    portfolio = Portfolio()
+    portfolio.show_portfolio()

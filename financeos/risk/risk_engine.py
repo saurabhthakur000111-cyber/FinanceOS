@@ -12,34 +12,52 @@ class RiskEngine:
 
         score = 100
 
-        # volatility risk
+        # Volatility Risk
         if volatility > 0.30:
             score -= 30
         elif volatility > 0.15:
             score -= 15
 
-        # debt risk
+        # Debt Risk
         if debt_ratio > 0.70:
             score -= 30
         elif debt_ratio > 0.40:
             score -= 15
 
-        # liquidity protection
+        # Liquidity Risk
         if liquidity_ratio < 1:
             score -= 20
 
         return max(score, 0)
 
+    def calculate_risk(self):
+
+        # Sample values
+        volatility = 0.18
+        debt_ratio = 0.35
+        liquidity_ratio = 2.0
+
+        risk = self.calculate_risk_score(
+            volatility,
+            debt_ratio,
+            liquidity_ratio
+        )
+
+        print("========== RISK REPORT ==========")
+        print(f"Volatility      : {volatility:.2f}")
+        print(f"Debt Ratio      : {debt_ratio:.2f}")
+        print(f"Liquidity Ratio : {liquidity_ratio:.2f}")
+        print(f"Risk Score      : {risk}")
+
+        if risk >= 80:
+            print("Risk Level      : LOW")
+        elif risk >= 60:
+            print("Risk Level      : MEDIUM")
+        else:
+            print("Risk Level      : HIGH")
+
 
 if __name__ == "__main__":
 
     engine = RiskEngine()
-
-    risk = engine.calculate_risk_score(
-        volatility=0.18,
-        debt_ratio=0.35,
-        liquidity_ratio=2
-    )
-
-    print("========== RISK REPORT ==========")
-    print("Risk Score :", risk)
+    engine.calculate_risk()
