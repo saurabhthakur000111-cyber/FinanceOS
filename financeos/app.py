@@ -31,10 +31,16 @@ st.subheader("AI Powered Financial Intelligence Platform")
 st.header("🌎 Market Overview")
 
 
+@st.cache_data(ttl=300)
 def get_price(symbol):
+
     try:
         data = yf.Ticker(symbol)
-        price = data.history(period="1d")["Close"].iloc[-1]
+
+        price = data.history(
+            period="1d"
+        )["Close"].iloc[-1]
+
         return round(float(price), 2)
 
     except Exception:
@@ -50,17 +56,20 @@ with col1:
         get_price("^NSEI")
     )
 
+
 with col2:
     st.metric(
         "SENSEX",
         get_price("^BSESN")
     )
 
+
 with col3:
     st.metric(
         "RELIANCE",
         get_price("RELIANCE.NS")
     )
+
 
 with col4:
     st.metric(
@@ -76,7 +85,7 @@ with col4:
 st.header("💼 Portfolio Intelligence")
 
 
-st.subheader("📁 Add Stock Holding")
+st.subheader("➕ Add Stock Holding")
 
 
 col1, col2, col3 = st.columns(3)
@@ -98,19 +107,19 @@ with col2:
 
 
 with col3:
-    price = st.number_input(
+    buy_price = st.number_input(
         "Buy Price",
         min_value=1.0,
         value=2500.0
     )
 
 
-if st.button("➕ Add Stock"):
+if st.button("Add Stock"):
 
     add_stock(
         symbol,
         quantity,
-        price
+        buy_price
     )
 
     st.success(
@@ -119,7 +128,7 @@ if st.button("➕ Add Stock"):
 
 
 # -----------------------------
-# Display Portfolio
+# Portfolio P&L Engine
 # -----------------------------
 
 st.subheader("📊 Current Holdings")
@@ -140,10 +149,95 @@ if portfolio:
         ]
     )
 
+
+    current_prices = []
+    investments = []
+    current_values = []
+    profits = []
+
+
+    for _, row in df.iterrows():
+
+        current_price = get_price(
+            row["Symbol"]
+        )
+
+
+        if current_price != "N/A":
+
+            investment = (
+                row["Quantity"]
+                *
+                row["Buy Price"]
+            )
+
+
+            current_value = (
+                row["Quantity"]
+                *
+                current_price
+            )
+
+
+            profit = (
+                current_value
+                -
+                investment
+            )
+
+
+        else:
+
+            investment = 0
+            current_value = 0
+            profit = 0
+
+
+        current_prices.append(current_price)
+        investments.append(round(investment, 2))
+        current_values.append(round(current_value, 2))
+        profits.append(round(profit, 2))
+
+
+    df["Current Price"] = current_prices
+    df["Investment"] = investments
+    df["Current Value"] = current_values
+    df["P&L"] = profits
+
+
     st.dataframe(
         df,
         width="stretch"
     )
+
+
+    total_investment = sum(investments)
+    total_value = sum(current_values)
+    total_profit = sum(profits)
+
+
+    col1, col2, col3 = st.columns(3)
+
+
+    with col1:
+        st.metric(
+            "Total Investment",
+            f"₹{total_investment:,.2f}"
+        )
+
+
+    with col2:
+        st.metric(
+            "Current Value",
+            f"₹{total_value:,.2f}"
+        )
+
+
+    with col3:
+        st.metric(
+            "Total P&L",
+            f"₹{total_profit:,.2f}"
+        )
 
 
 else:
