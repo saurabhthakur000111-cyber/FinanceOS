@@ -11,7 +11,7 @@ class RatioAnalysis:
         revenue=800000,
         gross_profit=320000,
         shares_outstanding=10000,
-        market_price=333.02
+        market_price=333.02,
     ):
 
         self.current_assets = current_assets

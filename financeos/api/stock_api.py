@@ -1,7 +1,7 @@
-import requests
 import os
-from dotenv import load_dotenv
 
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -21,10 +21,7 @@ def get_stock_price(symbol):
     )
 
     try:
-        response = requests.get(
-            url,
-            timeout=10
-        )
+        response = requests.get(url, timeout=10)
 
         response.raise_for_status()
 
@@ -34,11 +31,9 @@ def get_stock_price(symbol):
     except requests.exceptions.RequestException as e:
         raise Exception(f"API request failed: {e}")
 
-
     data = response.json()
 
     if "Global Quote" not in data:
         raise Exception("Invalid stock symbol or API limit reached")
-
 
     return data["Global Quote"]

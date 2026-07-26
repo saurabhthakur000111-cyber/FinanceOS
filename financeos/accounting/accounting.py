@@ -9,18 +9,14 @@ class Accounting:
         self.revenue = 0
         self.expenses = 0
 
-
     def add_revenue(self, amount):
         self.revenue += amount
-
 
     def add_expense(self, amount):
         self.expenses += amount
 
-
     def profit(self):
         return self.revenue - self.expenses
-
 
 
 if __name__ == "__main__":

@@ -15,7 +15,7 @@ class MarketData:
             "price": info.get("currentPrice"),
             "previous_close": info.get("previousClose"),
             "market_cap": info.get("marketCap"),
-            "volume": info.get("volume")
+            "volume": info.get("volume"),
         }
 
 

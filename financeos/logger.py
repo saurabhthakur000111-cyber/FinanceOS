@@ -8,7 +8,7 @@ os.makedirs("logs", exist_ok=True)
 logging.basicConfig(
     filename="logs/financeos.log",
     level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
 # Create logger

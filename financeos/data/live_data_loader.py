@@ -20,11 +20,7 @@ class LiveDataLoader:
         print(f"Price : {price}")
         print(f"Volume: {volume}")
 
-        self.db.save_stock(
-            symbol,
-            price,
-            volume
-        )
+        self.db.save_stock(symbol, price, volume)
 
 
 if __name__ == "__main__":

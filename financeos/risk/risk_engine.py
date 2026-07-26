@@ -3,12 +3,7 @@ class RiskEngine:
     def __init__(self):
         pass
 
-    def calculate_risk_score(
-        self,
-        volatility,
-        debt_ratio,
-        liquidity_ratio
-    ):
+    def calculate_risk_score(self, volatility, debt_ratio, liquidity_ratio):
 
         score = 100
 
@@ -37,11 +32,7 @@ class RiskEngine:
         debt_ratio = 0.35
         liquidity_ratio = 2.0
 
-        risk = self.calculate_risk_score(
-            volatility,
-            debt_ratio,
-            liquidity_ratio
-        )
+        risk = self.calculate_risk_score(volatility, debt_ratio, liquidity_ratio)
 
         print("========== RISK REPORT ==========")
         print(f"Volatility      : {volatility:.2f}")

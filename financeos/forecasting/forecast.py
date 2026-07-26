@@ -6,7 +6,6 @@ class ForecastEngine:
     def __init__(self):
         self.db = Database()
 
-
     def get_average_price(self, symbol):
 
         query = """
@@ -23,7 +22,6 @@ class ForecastEngine:
 
         return result[0]
 
-
     def forecast_price(self, symbol):
 
         avg_price = self.get_average_price(symbol)
@@ -33,7 +31,6 @@ class ForecastEngine:
             return round(future_price, 2)
 
         return None
-
 
 
 if __name__ == "__main__":

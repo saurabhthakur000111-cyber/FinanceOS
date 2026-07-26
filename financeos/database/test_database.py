@@ -1,15 +1,17 @@
-from financeos.database import Database
+from financeos.database.database import Database
 
-db = Database()
 
-print("Database initialized successfully.")
+def test_database_initialization():
+    db = Database()
+    assert db is not None
+    db.close()
 
-db.save_stock(
-    "AAPL",
-    333.02,
-    47489415
-)
 
-print("AAPL data saved successfully.")
+def test_save_stock():
+    db = Database()
 
-db.close()
+    db.save_stock("AAPL", 333.02, 47489415)
+
+    assert db is not None
+
+    db.close()

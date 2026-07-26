@@ -15,9 +15,6 @@ class GrahamValuation:
 
 if __name__ == "__main__":
 
-    graham = GrahamValuation(
-        eps=12,
-        book_value=45
-    )
+    graham = GrahamValuation(eps=12, book_value=45)
 
     print("Graham Value =", round(graham.calculate(), 2))

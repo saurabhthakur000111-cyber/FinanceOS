@@ -24,4 +24,3 @@ class Config:
     DEFAULT_FORECAST_YEARS = 5
 
     DEBUG = True
-    

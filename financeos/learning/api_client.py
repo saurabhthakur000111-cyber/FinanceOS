@@ -1,6 +1,5 @@
 from financeos.api.stock_api import get_stock_price
 
-
 symbol = input("Enter Stock Symbol: ").upper()
 
 

@@ -27,10 +27,7 @@ class Database:
         (symbol, price, volume, created_at)
         VALUES (?, ?, ?, ?)
         """
-        self.connection.execute(
-            query,
-            (symbol, price, volume, datetime.now())
-        )
+        self.connection.execute(query, (symbol, price, volume, datetime.now()))
         self.connection.commit()
 
     def fetch_all(self, query):

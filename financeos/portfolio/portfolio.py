@@ -4,11 +4,7 @@ class Portfolio:
         self.assets = []
 
     def add_asset(self, symbol, shares, price):
-        self.assets.append({
-            "symbol": symbol,
-            "shares": shares,
-            "price": price
-        })
+        self.assets.append({"symbol": symbol, "shares": shares, "price": price})
 
     def total_value(self):
         total = 0
@@ -35,7 +31,7 @@ class Portfolio:
                 f'{asset["symbol"]} | '
                 f'{asset["shares"]} Shares | '
                 f'₹{asset["price"]:.2f} | '
-                f'Value = ₹{value:.2f}'
+                f"Value = ₹{value:.2f}"
             )
 
         print("------------------------------")

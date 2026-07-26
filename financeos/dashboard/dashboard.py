@@ -1,9 +1,9 @@
-from financeos.market.market_data import MarketData
 from financeos.ai.financial_ai import FinancialAI
 from financeos.analysis.ratio_analysis import RatioAnalysis
+from financeos.fundamentals.financial_statements import FinancialStatements
+from financeos.market.market_data import MarketData
 from financeos.portfolio.portfolio import Portfolio
 from financeos.risk.risk_engine import RiskEngine
-from financeos.fundamentals.financial_statements import FinancialStatements
 from financeos.valuation.valuation import CompanyValuation
 
 
@@ -56,7 +56,7 @@ def main():
         revenue=800000,
         gross_profit=320000,
         shares_outstanding=10000,
-        market_price=333.02
+        market_price=333.02,
     )
 
     print("========== FINANCIAL RATIOS ==========")
@@ -96,9 +96,7 @@ def main():
     risk = RiskEngine()
 
     score = risk.calculate_risk_score(
-        volatility=0.18,
-        debt_ratio=0.35,
-        liquidity_ratio=2
+        volatility=0.18, debt_ratio=0.35, liquidity_ratio=2
     )
 
     print("========== RISK REPORT ==========")
