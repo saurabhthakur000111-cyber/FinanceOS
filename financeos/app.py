@@ -1,3 +1,10 @@
+from analytics.portfolio_analytics import (
+    calculate_returns,
+    calculate_volatility,
+    calculate_sharpe,
+    calculate_beta,
+    risk_score
+)
 import streamlit as st
 import yfinance as yf
 import pandas as pd
@@ -245,7 +252,74 @@ else:
     st.info(
         "No stocks added yet"
     )
+# -----------------------------
+# Portfolio Analytics
+# -----------------------------
 
+st.header("📈 Portfolio Analytics")
+
+
+if portfolio:
+
+    symbols = df["Symbol"].tolist()
+
+
+    returns = calculate_returns(symbols)
+
+
+    avg_returns = returns.mean(axis=1)
+
+
+    volatility = calculate_volatility(
+        avg_returns
+    )
+
+
+    sharpe = calculate_sharpe(
+        avg_returns
+    )
+
+
+    beta = calculate_beta(
+        symbols[0]
+    )
+
+
+    score = risk_score(
+        volatility,
+        sharpe
+    )
+
+
+    col1, col2, col3, col4 = st.columns(4)
+
+
+    with col1:
+        st.metric(
+            "Volatility",
+            f"{volatility:.2%}"
+        )
+
+
+    with col2:
+        st.metric(
+            "Sharpe Ratio",
+            round(sharpe,2)
+        )
+
+
+    with col3:
+        st.metric(
+            "Beta vs NIFTY",
+            beta
+        )
+
+
+    with col4:
+        st.metric(
+            "Risk Score",
+            f"{score}/100"
+        )
 
 # -----------------------------
 # Footer
