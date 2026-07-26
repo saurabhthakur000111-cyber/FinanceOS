@@ -29,3 +29,7 @@ __pycache__/
 logs/
 # Database
 *.db
+.agents/
+.streamlit/
+__pycache__/
+*.pyc
