@@ -52,76 +52,57 @@ def calculate_beta(
     benchmark="^NSEI"
 ):
 
-    stock_price = yf.download(
+    stock_data = yf.download(
         stock,
         period="1y",
         auto_adjust=True
     )["Close"]
 
 
-    market_price = yf.download(
+    market_data = yf.download(
         benchmark,
         period="1y",
         auto_adjust=True
     )["Close"]
 
 
-    data = pd.concat(
+    if hasattr(stock_data, "columns"):
+        stock_data = stock_data.iloc[:,0]
+
+    if hasattr(market_data, "columns"):
+        market_data = market_data.iloc[:,0]
+
+
+    returns = pd.concat(
         [
-            stock_price,
-            market_price
+            stock_data.pct_change(),
+            market_data.pct_change()
         ],
         axis=1
     ).dropna()
 
 
-    data.columns = [
-        "Stock",
-        "Market"
+    returns.columns = [
+        "Stock_Return",
+        "Market_Return"
     ]
 
 
     covariance = np.cov(
-        data["Stock"],
-        data["Market"]
+        returns["Stock_Return"],
+        returns["Market_Return"]
     )[0][1]
 
 
-    variance = np.var(
-        data["Market"]
+    market_variance = np.var(
+        returns["Market_Return"]
     )
+
+
+    beta = covariance / market_variance
 
 
     return round(
-        float(covariance / variance),
+        float(beta),
         2
-    )
-
-
-
-def calculate_risk_score(
-    volatility,
-    sharpe
-):
-
-    score = 50
-
-
-    if volatility < 0.15:
-        score += 20
-
-    elif volatility > 0.30:
-        score -= 20
-
-
-    if sharpe > 1:
-        score += 20
-
-    elif sharpe < 0:
-        score -= 20
-
-
-    return max(
-        0,
-        min(score,100)
     )
