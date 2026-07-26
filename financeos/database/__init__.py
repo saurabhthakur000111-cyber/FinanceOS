@@ -1,3 +1,6 @@
-from .database import Database
-
-__all__ = ["Database"]
+from .database import (
+    get_connection,
+    initialize_database,
+    add_stock,
+    get_portfolio
+)
