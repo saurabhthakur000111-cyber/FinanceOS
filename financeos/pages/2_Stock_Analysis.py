@@ -80,7 +80,7 @@ if st.button("Analyze"):
 
 
     history = stock.history(
-        period="1 year"
+        period="1y"
     )
 
 
@@ -103,7 +103,7 @@ if st.button("Analyze"):
 
     st.plotly_chart(
         fig,
-        use_container_width=True
+        width="stretch"
     )
 
 
