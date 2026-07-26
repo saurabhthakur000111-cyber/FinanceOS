@@ -5,13 +5,13 @@ import numpy as np
 
 def calculate_returns(symbols):
 
-    data = yf.download(
+    prices = yf.download(
         symbols,
         period="1y",
         auto_adjust=True
     )["Close"]
 
-    returns = data.pct_change().dropna()
+    returns = prices.pct_change().dropna()
 
     return returns
 
@@ -19,87 +19,90 @@ def calculate_returns(symbols):
 
 def calculate_volatility(returns):
 
-    volatility = (
+    return (
         returns.std()
         *
         np.sqrt(252)
     )
-
-    return volatility
 
 
 
 def calculate_sharpe(returns):
 
-    portfolio_return = returns.mean() * 252
+    annual_return = returns.mean() * 252
 
-    volatility = (
+    annual_volatility = (
         returns.std()
         *
         np.sqrt(252)
     )
 
-    if volatility == 0:
+    if annual_volatility == 0:
         return 0
 
-    sharpe = (
-        portfolio_return
-        /
-        volatility
+    return (
+        annual_return /
+        annual_volatility
     )
 
-    return sharpe
 
 
+def calculate_beta(
+    stock,
+    benchmark="^NSEI"
+):
 
-def calculate_beta(stock, benchmark="^NSEI"):
-
-    stock_data = yf.download(
+    stock_price = yf.download(
         stock,
         period="1y",
         auto_adjust=True
     )["Close"]
 
-    benchmark_data = yf.download(
+
+    market_price = yf.download(
         benchmark,
         period="1y",
         auto_adjust=True
     )["Close"]
 
 
-    combined = pd.concat(
+    data = pd.concat(
         [
-            stock_data,
-            benchmark_data
+            stock_price,
+            market_price
         ],
         axis=1
     ).dropna()
 
 
-    combined.columns = [
+    data.columns = [
         "Stock",
         "Market"
     ]
 
 
     covariance = np.cov(
-        combined["Stock"],
-        combined["Market"]
+        data["Stock"],
+        data["Market"]
     )[0][1]
 
 
-    market_variance = np.var(
-        combined["Market"]
+    variance = np.var(
+        data["Market"]
     )
 
 
-    beta = covariance / market_variance
+    return round(
+        float(covariance / variance),
+        2
+    )
 
-    return round(float(beta), 2)
 
 
-
-def risk_score(volatility, sharpe):
+def calculate_risk_score(
+    volatility,
+    sharpe
+):
 
     score = 50
 
@@ -120,5 +123,5 @@ def risk_score(volatility, sharpe):
 
     return max(
         0,
-        min(score, 100)
+        min(score,100)
     )
