@@ -1,3 +1,4 @@
+from ai_assistant.chat_engine import generate_analysis
 import streamlit as st
 import yfinance as yf
 import pandas as pd
@@ -318,7 +319,30 @@ if portfolio:
             "Risk Score",
             f"{score}/100"
         )
+# -----------------------------
+# AI Investment Assistant
+# -----------------------------
 
+st.header("🤖 AI Investment Assistant")
+
+
+ai_symbol = st.text_input(
+    "Enter Stock Symbol",
+    "RELIANCE.NS"
+)
+
+
+if st.button("Generate AI Analysis"):
+
+    analysis = generate_analysis(
+        ai_symbol
+    )
+
+    st.text_area(
+        "FinanceOS AI Report",
+        analysis,
+        height=350
+    )
 # -----------------------------
 # Footer
 # -----------------------------
